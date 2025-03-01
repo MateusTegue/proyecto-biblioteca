@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { registrarEstudiante } from '../controllers/estudiante.controller.js';
 import { mostrarEstudiantes } from '../controllers/estudiante.controller.js';
 import { buscarEstudiante } from '../controllers/estudiante.controller.js';
-import { buscarEstudianteNUIP } from '../controllers/estudiante.controller.js';
+import { buscarEstudianteNUIPController } from '../controllers/estudiante.controller.js';
 import { eliminarEstudiante } from '../controllers/estudiante.controller.js';
 import { actualizarEstudiante } from '../controllers/estudiante.controller.js';
 const router = Router();
@@ -11,9 +11,9 @@ const router = Router();
 router.post('/api/estudiante', registrarEstudiante);
 router.get('/api/estudiante', mostrarEstudiantes);
 router.get('/api/estudiante/:codigo', buscarEstudiante);
-router.get('/api/estudianteNUIP/:nuip_estudiante', buscarEstudianteNUIP);
-router.delete('/api/estudiante/:codigo', eliminarEstudiante);
-router.put('/api/estudiante/:nuip_estudiante', actualizarEstudiante);
+router.get('/api/estudianteNUIP/:nuip_estudiante', buscarEstudianteNUIPController);
+router.delete('/api/estudianteNUIP/:nuip_estudiante', eliminarEstudiante);
+router.put('/api/estudianteNUIP/:nuip_estudiante', actualizarEstudiante);
 
 
 

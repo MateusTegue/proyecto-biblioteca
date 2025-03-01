@@ -4,6 +4,7 @@ import { pool } from '../database/conexion.js'
 
 
 
+
 // registrar libros 
 
 const registrarLibro = async (
@@ -20,7 +21,8 @@ const registrarLibro = async (
 
     // formatear la fecha antes de guardarla en la base de datos 
     const [dia, mes, anio ] = fecha_publicacion.split("/")
-    const fechaFormateada = `${dia}-${mes}-${anio}`;
+    const  fechaFormateada = `${anio}-${mes}-${dia}`;
+
 
 
 
@@ -62,9 +64,15 @@ const buscarLibro = async (titulo_libro) => {
     const query = {
             text: `SELECT * FROM libro WHERE titulo_libro = $1`,
             values: [titulo_libro]
-        }
+        };
+
         const { rows } = await pool.query(query)
-        return rows
+        
+        if (rows.length === 0) {
+            return null; // Si no encuentra el estudiante, retorna null
+        }
+
+        return rows[0]
 }
 
 // buscar libros por codigo
@@ -79,7 +87,7 @@ const buscarLibroCodigoCode = async (codigo_libro) => {
 
 
 // actualizar informacion del libro
-const actualizarLibro = async (codigo_libro,
+const actualizarLibroModel = async (codigo_libro,
     titulo_libro,
     autor_libro,
     fecha_publicacion,
@@ -87,14 +95,15 @@ const actualizarLibro = async (codigo_libro,
     imagen_libro,
     cantidad) => {
         try{
+
             const query = {
-                text: `UPDATE libros SET titulo_libro = $1,
+                text: `UPDATE libro SET titulo_libro = $1,
                 autor_libro = $2,
                 fecha_publicacion = $3,
                 editorial_libro = $4,
                 imagen_libro = $5,
                 cantidad = $6
-                WHERE codigo_libro = $7`,
+                WHERE codigo_libro = $7 RETURNING *`,
                 values: [titulo_libro,
                     autor_libro,
                     fecha_publicacion,
@@ -105,12 +114,6 @@ const actualizarLibro = async (codigo_libro,
             }
 
             const {rows } = await pool.query(query)
-                
-            if (rows.length === 0) {
-                console.error("No se encontró el libro:", autor_libro);
-                throw new Error("Libro no encontrado");
-            }
-
             return rows[0]
 
 
@@ -143,8 +146,9 @@ export const LibroModel = {
     mostrarLibros,
     buscarLibro,
     buscarLibroCodigoCode,
-    eliminarLibro,
-    actualizarLibro
+    actualizarLibroModel,
+    eliminarLibro
+    
     }  // exportar el modelo de libro
 
 

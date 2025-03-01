@@ -51,12 +51,46 @@ export const buscarLibroCodigoCode = async (req, res) => {
       }
 
       const libro = await LibroModel.buscarLibroCodigoCode(codigo_libro);
+      
+      if (!libro) {
+        return res.status(404).json({ message: "libro no encontrado" });
+    }
 
       return res.status(200).json(libro)
 
     } catch (error) {
         console.log(error)
     }
+}
+
+
+// actualizar informacion del libro 
+export const actualizarLibro = async (req, res) => {
+    try {
+        // obtenemos los campos que vamos a actualizar
+        const {codigo_libro, titulo_libro,  autor_libro, fecha_publicacion, editorial_libro, imagen_libro, cantidad} = req.body;
+
+        // verificamos que no queden campos vacios a la hora de actualizar
+        if (!codigo_libro || !titulo_libro || !autor_libro || !fecha_publicacion || !editorial_libro || !imagen_libro || !cantidad) {
+            return res.status(400).json({ message: "Falta algún campo" });
+            }
+        
+            const libro = await LibroModel.actualizarLibroModel(
+                codigo_libro,
+                titulo_libro,
+                autor_libro,
+                fecha_publicacion,
+                editorial_libro,
+                imagen_libro,
+                cantidad
+            );
+            
+            return res.status(200).json(libro)
+        
+
+    } catch (error) {
+        return res.status(500).json({message : "Error al actualizar el libro" })
+        }
 }
 
 
@@ -73,7 +107,7 @@ export const eliminarLibro = async (req, res) => {
         return res.status(200).json({message: "Libro eliminado correctamente", data : libro})
 
     } catch (error){
-        return res.status(400).json({message: "Error al eliminar el libro"})
+        return res.status(400).json({message: "Error al eliminar el libro | no se econtro en la base de datos"})
     }
 }
 

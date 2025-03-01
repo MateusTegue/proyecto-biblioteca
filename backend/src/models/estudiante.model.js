@@ -49,15 +49,25 @@ const buscarEstudiante = async (codigo) => {
     return rows[0];
 }
 
-// buscar estudiante port nuip
+// Función para buscar estudiante por NUIP
 const buscarEstudianteNUIP = async (nuip_estudiante) => {
-    const query = {
-        text: `SELECT * FROM estudiante WHERE nuip_estudiante = $1`,
-        values: [nuip_estudiante]
+    try {
+        const query = {
+            text: `SELECT * FROM estudiante WHERE nuip_estudiante = $1`,
+            values: [nuip_estudiante]
         };
-    const { rows } = await pool.query(query);
-    return rows[0];
-}
+        const { rows } = await pool.query(query);
+        
+        if (rows.length === 0) {
+            resizeBy.status(404).send({ message: "Estudiante no encontrado" });
+        }
+
+        return rows[0];
+    } catch (error) {
+        console.error("Error en la consulta SQL:", error);
+        throw error; // Lanza el error para que el controlador lo maneje
+    }
+};
 
 
 

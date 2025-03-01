@@ -3,6 +3,7 @@ import { registrarLibro } from "../controllers/libro.controller.js";
 import { mostarLibros } from "../controllers/libro.controller.js";
 import { buscarLibroCodigoCode } from "../controllers/libro.controller.js";
 import { eliminarLibro } from "../controllers/libro.controller.js";
+import { actualizarLibro } from "../controllers/libro.controller.js";
 
 
 const router = Router();
@@ -12,6 +13,7 @@ router.post("/api/libro", registrarLibro);
 router.get("/api/libro", mostarLibros);
 router.get("/api/libroCode/:codigo_libro", buscarLibroCodigoCode);
 router.delete("/api/libroCode/:codigo_libro", eliminarLibro);
+router.put("/api/libroCode/:codigo_libro", actualizarLibro);
 
 
 

@@ -29,6 +29,9 @@ export const registrarEstudiante = async (req, res) => {
 export const mostrarEstudiantes = async (req, res) => {
     try {
         const estudisntes = await EstudianteModel.mostrarEstudiantes();
+        if(!estudisntes){
+            return res.status(404).json({ message: "No hay estudiantes registrados" });
+        }
         return res.status(200).json(estudisntes );
 
     } catch (error) {
@@ -54,25 +57,27 @@ export const buscarEstudiante = async (req, res) => {
     }
 }
 
-// buscar estudiantes por numero de identificacion personal
-export const buscarEstudianteNUIP = async (req, res) => {
+// Controlador de Express para la ruta
+export const buscarEstudianteNUIPController = async (req, res) => {
     try {
-
         const { nuip_estudiante } = req.params;
 
         if (!nuip_estudiante) {
             return res.status(400).json({ message: "Falta el NUIP del estudiante" });
-        };
+        }
 
-        const estudiante = await EstudianteModel.buscarEstudianteNUIP(nuip_estudiante)
+        const estudiante = await EstudianteModel.buscarEstudianteNUIP(nuip_estudiante);
+
+        if (!estudiante) {
+            return res.status(404).json({ message: "Estudiante no encontrado" });
+        }
+
         return res.status(200).json(estudiante);
-
     } catch (error) {
-        
+        console.error("Error en el servidor:", error);
         return res.status(500).json({ message: "Error al buscar estudiante" });
     }
-}
-
+};
 
 
 // actualizar informacion del estudiante 
@@ -109,12 +114,12 @@ export const actualizarEstudiante = async (req, res) => {
 // metodo para eliminar estudiantes
 export const eliminarEstudiante = async (req, res) => {
     try {
-        const { codigo } = req.params;
-        if (!codigo) {
+        const { nuip_estudiante } = req.params;
+        if (!nuip_estudiante) {
             return res.status(400).json({ message: "Falta el código del estudiante"});
         };
 
-        const estudiante = await EstudianteModel.eliminarEstudiante(codigo);
+        const estudiante = await EstudianteModel.eliminarEstudiante(nuip_estudiante);
         return res.status(200).json({message: "Estudiante eliminado con éxito"});
 
     } catch (error) {
