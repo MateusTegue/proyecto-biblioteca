@@ -20,4 +20,4 @@ router.put('/api/estudianteNUIP/:nuip_estudiante', actualizarEstudiante);
 export default router;  //exportamos el router para poder usarlo en otros archivos.  //exportamos
 
 
-
+// es todo lo que tenemos que hacer en este archivo.
